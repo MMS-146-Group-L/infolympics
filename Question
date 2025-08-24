@@ -5,11 +5,10 @@ class Question:
         self.correct_answer = correct_answer      # the correct answer
 
     def check_answer(self, user_answer):
-        """Check if the user's answer is correct."""
         return user_answer.strip().lower() == self.correct_answer.lower()
 
 
-# --- 15 Pop Culture Questions ---
+# 15 Pop Culture Questions 
 question_bank = [
     Question("In the series Game of Thrones, who is known as the 'Mother of Dragons'?",
              ["Cersei Lannister", "Daenerys Targaryen", "Sansa Stark", "Arya Stark"],
@@ -73,7 +72,7 @@ question_bank = [
 ]
 
 
-# --- Test ---
+# Test 
 if __name__ == "__main__":
     # Example: test the first question
     q = question_bank[0]
