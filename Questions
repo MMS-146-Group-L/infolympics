@@ -7,6 +7,34 @@ class Question:
     def check_answer(self, user_answer):
         return user_answer.strip().lower() == self.correct_answer.lower()
 
+    def display_question(self):
+        print(f"Q: {self.question_text}")
+        for idx, option in enumerate(self.answers, 1):
+            print(f"{idx}. {option}")
+
+    def get_correct_choice_index(self):
+        try:
+            return self.answers.index(self.correct_answer) + 1
+        except ValueError:
+            return None
+
+    def is_valid_choice(self, choice):
+        if isinstance(choice, int):
+            return 1 <= choice <= len(self.answers)
+        elif isinstance(choice, str):
+            return choice.strip().lower() in [ans.lower() for ans in self.answers]
+        return False
+
+    def get_feedback(self, user_answer):
+        if self.check_answer(user_answer):
+            return "Correct!"
+        else:
+            return f"Wrong! The correct answer is: {self.correct_answer}"
+
+    def shuffle_answers(self):
+        import random
+        random.shuffle(self.answers)
+
 
 # 15 Pop Culture Questions 
 question_bank = [
@@ -74,15 +102,8 @@ question_bank = [
 
 # Test 
 if __name__ == "__main__":
-    # Example: test the first question
     q = question_bank[0]
-    print("Q:", q.question_text)
-    print("Choices:", q.answers)
+    q.shuffle_answers()
+    q.display_question()
     answer = input("Your answer: ")
-    if q.check_answer(answer):
-        print("Correct!")
-    else:
-        print("Wrong! The correct answer is:", q.correct_answer)
-
-
-
+    print(q.get_feedback(answer))
