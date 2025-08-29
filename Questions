@@ -1,0 +1,88 @@
+class Question:
+    def __init__(self, question_text, answers, correct_answer):
+        self.question_text = question_text        # the given question
+        self.answers = answers                    # list of possible answers
+        self.correct_answer = correct_answer      # the correct answer
+
+    def check_answer(self, user_answer):
+        return user_answer.strip().lower() == self.correct_answer.lower()
+
+
+# 15 Pop Culture Questions 
+question_bank = [
+    Question("In the series Game of Thrones, who is known as the 'Mother of Dragons'?",
+             ["Cersei Lannister", "Daenerys Targaryen", "Sansa Stark", "Arya Stark"],
+             "Daenerys Targaryen"),
+
+    Question("Which animated movie features the characters Woody and Buzz Lightyear?",
+             ["Finding Nemo", "Toy Story", "Shrek", "The Incredibles"],
+             "Toy Story"),
+
+    Question("Who voices Donkey in Shrek?",
+             ["Eddie Murphy", "Chris Rock", "Will Smith", "Kevin Hart"],
+             "Eddie Murphy"),
+
+    Question("What is the name of the fictional African country in Black Panther?",
+             ["Zamunda", "Wakanda", "Genovia", "Latveria"],
+             "Wakanda"),
+
+    Question("In the Harry Potter films, who killed Dumbledore?",
+             ["Lord Voldemort", "Severus Snape", "Bellatrix Lestrange", "Draco Malfoy"],
+             "Severus Snape"),
+
+    Question("Who is known as the 'King of Pop'?",
+             ["Elvis Presley", "Michael Jackson", "Prince", "Bruno Mars"],
+             "Michael Jackson"),
+
+    Question("Which female artist released the hit song 'Rolling in the Deep'?",
+             ["Adele", "Rihanna", "Beyoncé", "Sia"],
+             "Adele"),
+
+    Question("What is the stage name of Stefani Joanne Angelina Germanotta?",
+             ["Lady Gaga", "Pink", "Dua Lipa", "Halsey"],
+             "Lady Gaga"),
+
+    Question("Which band released the song 'Bohemian Rhapsody'?",
+             ["The Beatles", "Queen", "Led Zeppelin", "Pink Floyd"],
+             "Queen"),
+
+    Question("Which rapper released the album 'Scorpion' in 2018?",
+             ["Kanye West", "Drake", "Jay-Z", "Lil Wayne"],
+             "Drake"),
+
+    Question("What is the best-selling video game of all time?",
+             ["Minecraft", "Tetris", "Grand Theft Auto V", "Fortnite"],
+             "Minecraft"),
+
+    Question("In Among Us, what is the role of the player trying to eliminate others secretly?",
+             ["Crewmate", "Impostor", "Leader", "Captain"],
+             "Impostor"),
+
+    Question("Which video game character is known for collecting rings?",
+             ["Mario", "Sonic the Hedgehog", "Crash Bandicoot", "Kirby"],
+             "Sonic the Hedgehog"),
+
+    Question("What color is Pac-Man?",
+             ["Red", "Yellow", "Blue", "Green"],
+             "Yellow"),
+
+    Question("Which popular game features the phrase 'Victory Royale'?",
+             ["PUBG", "Call of Duty", "Fortnite", "Overwatch"],
+             "Fortnite")
+]
+
+
+# Test 
+if __name__ == "__main__":
+    # Example: test the first question
+    q = question_bank[0]
+    print("Q:", q.question_text)
+    print("Choices:", q.answers)
+    answer = input("Your answer: ")
+    if q.check_answer(answer):
+        print("Correct!")
+    else:
+        print("Wrong! The correct answer is:", q.correct_answer)
+
+
+

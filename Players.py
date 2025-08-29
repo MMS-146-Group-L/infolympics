@@ -26,8 +26,8 @@ print("Welcome to infoLympics,", playername.get_name(),"!")
 update = input("Would you like to update your name? (yes/no): ").lower()
 
 if update == "yes":
-    new_first = input("Enter your updated first name: ")
-    new_last = input("Enter your updated last name: ")
+    new_first = input("Type your new first name: ")
+    new_last = input("Type your new last name: ")
     playername.set_name(new_first, new_last)
     print("Let's get started,", playername.get_name(), "!")
 else:
