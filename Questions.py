@@ -1,11 +1,44 @@
+import random
+
 class Question:
     def __init__(self, question_text, answers, correct_answer):
-        self.question_text = question_text        # the given question
-        self.answers = answers                    # list of possible answers
-        self.correct_answer = correct_answer      # the correct answer
+        self._question_text = question_text        # the given question
+        self._answers = answers[:]                 # list of possible answers (copied)
+        self._correct_answer = correct_answer      # the correct answer
 
+    # ——— Getters ———
+    def get_question_text(self):
+        """Return the question text."""
+        return self._question_text
+
+    def get_answers(self):
+        """Return a list of possible answers."""
+        return self._answers[:]
+
+    def get_correct_answer(self):
+        """Return the correct answer."""
+        return self._correct_answer
+
+    # ——— Core behaviors ———
     def check_answer(self, user_answer):
-        return user_answer.strip().lower() == self.correct_answer.lower()
+        """Return True if user_answer matches the correct answer."""
+        return user_answer.strip().lower() == self._correct_answer.lower()
+
+    def display_question(self):
+        """Print the question and its current answer choices."""
+        print(f"Q: {self._question_text}")
+        for idx, ans in enumerate(self._answers, start=1):
+            print(f"  {idx}. {ans}")
+
+    def shuffle_answers(self):
+        """Randomize the order of answer choices."""
+        random.shuffle(self._answers)
+
+    def get_feedback(self, user_answer):
+        """Return a feedback message based on correctness."""
+        if self.check_answer(user_answer):
+            return "✅ Correct!"
+        return f"❌ Wrong! The correct answer is: {self._correct_answer}"
 
 
 # 15 Pop Culture Questions 
@@ -74,15 +107,17 @@ question_bank = [
 
 # Test 
 if __name__ == "__main__":
-    # Example: test the first question
     q = question_bank[0]
-    print("Q:", q.question_text)
-    print("Choices:", q.answers)
+
+    # Shuffle & display using your new methods
+    q.shuffle_answers()
+    print("Q:", q.get_question_text())
+    print("Choices:", q.get_answers())
+
     answer = input("Your answer: ")
-    if q.check_answer(answer):
-        print("Correct!")
-    else:
-        print("Wrong! The correct answer is:", q.correct_answer)
+    print(q.get_feedback(answer))
 
-
-
+    # You can also directly use display_question():
+    # q.display_question()
+    # answer = input("Your answer: ")
+    # print(q.get_feedback(answer))
