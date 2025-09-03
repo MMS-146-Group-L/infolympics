@@ -26,7 +26,7 @@ class Question:
 
     def display_question(self):
         """Print the question and its current answer choices."""
-        print(f"Q: {self._question_text}")
+        print(f"Q: {self.get_question_text}")
         for idx, ans in enumerate(self._answers, start=1):
             print(f"  {idx}. {ans}")
 

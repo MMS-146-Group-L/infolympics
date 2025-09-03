@@ -2,91 +2,119 @@ import random #used for shuffler
 from Questions import question_bank # import from questions.py
 
 class QuizGame:
-
+    """
+    Manages a single run of the quiz:
+      - holds a list of Question instances
+      - tracks score and current index
+      - presents questions and checks answers
+    """
     def __init__(self, question_bank):
-        '''Initializes the quiz game'''
-        self.question_bank = list(question_bank)    # question list
-        self.score = 0                              # player score
-        self.question_index = 0                     # question number
-        self.shuffle_questions()                    # shuffle
+        """Initializes the quiz game with a copy of the provided question list."""
+        self._question_bank = list(question_bank)  # keep a private copy
+        self._score = 0
+        self._index = 0
+        self.shuffle_questions()
 
     def shuffle_questions(self):
-        random.shuffle(self.question_bank)
+        """Randomize question order at the start or on reset."""
+        random.shuffle(self._question_bank)
 
     def display_question(self):
-        if self.question_index < len(self.question_bank):
-            #get current question object
-            question = self.question_bank[self.question_index]
-            
-            #display formatting
-            prompt = f"\nQ{self.question_index + 1}: {question.question_text}\n"
-            for i, answer in enumerate(question.answers):
-                prompt += f"  {chr(65 + i)}) {answer}\n"
-            return prompt
-        return None
+        """
+        Return a formatted question string (including choices),
+        or None if no more questions.
+        """
+        if self._index >= len(self._question_bank):
+            return None
 
-    def check_answer(self, user_answer): #Checks the user's answer by letter OR by full text.
-        current_question = self.question_bank[self.question_index]
-        user_answer = user_answer.strip() #remove spaces, error prevention
-        
-        player_choice_text = ""
+        q = self._question_bank[self._index]
 
-        #check if answer is letter or full word and correct
+        # Shuffle choices so position varies
+        q.shuffle_answers()
+
+        # Build the prompt
+        prompt = []
+        prompt.append(f"\nQ{self._index + 1}: {q.get_question_text()}")
+        for i, ans in enumerate(q.get_answers()):
+            prompt.append(f"  {chr(65 + i)}) {ans}")  # A) B) C) D)
+        return "\n".join(prompt)
+
+    def check_answer(self, user_answer):
+        """
+        Accept either:
+          - a single letter A-D (case-insensitive)
+          - or the full answer text
+        Update score and advance to the next question.
+        """
+        q = self._question_bank[self._index]
+        answers = q.get_answers()
+
+        user_answer = user_answer.strip()
+
+        # Resolve to the actual answer text
         if len(user_answer) == 1 and 'A' <= user_answer.upper() <= 'D':
-            choice_index = ord(user_answer.upper()) - ord('A') #convert to number using ascii code
-            
-            if choice_index < len(current_question.answers):
-                player_choice_text = current_question.answers[choice_index] #pulls the actual full word
+            idx = ord(user_answer.upper()) - ord('A')
+            if idx < len(answers):
+                chosen_text = answers[idx]
+            else:
+                chosen_text = ""
         else:
-            player_choice_text = user_answer
+            chosen_text = user_answer
 
-        # check answer and add score if correct
-        if player_choice_text.lower() == current_question.correct_answer.lower():
-            self.score += 1
-            print("Correct! ✅")
+        # Check correctness by text (case-insensitive)
+        correct_text = q.get_correct_answer()
+        if q.check_answer_text(chosen_text):
+            self._score += 1
+            print("Correct!")
         else:
-            print(f"Wrong! The correct answer was: {current_question.correct_answer}")
-        
-        self.question_index += 1 #move to the next question
+            print(f"Wrong! The correct answer was: {correct_text}")
 
-    def get_score(self):
-        total = len(self.question_bank)
-        return f"Your final score is: {self.score}/{total}" #score/total
+        self._index += 1  # move to next question
 
-    def reset_game(self): #reset
-        self.score = 0
-        self.question_index = 0
+    def get_score_text(self):
+        """Return a formatted score string."""
+        total = len(self._question_bank)
+        return f"Your current score: {self._score}/{total}"
+
+    def get_final_score_text(self):
+        total = len(self._question_bank)
+        return f"Your final score is: {self._score}/{total}"
+
+    def reset_game(self):
+        """Reset score and position, and reshuffle questions."""
+        self._score = 0
+        self._index = 0
         self.shuffle_questions()
         print("\nGame has been reset!")
 
-#  METHOD
+    def finished(self):
+        """True if we have already asked all questions."""
+        return self._index >= len(self._question_bank)
 
-game = QuizGame(question_bank)
 
-print("--- Welcome to the Pop Culture Quiz! ---")
+if __name__ == "__main__":
+    print("--- Welcome to InfoLympics - Your Pop Culture Quiz! ---")
 
-#game
-while True:
-    current_question_text = game.display_question()
+    while True:
+        game = QuizGame(question_bank)
 
-    if current_question_text is None:
+        # Play one full run
+        while not game.finished():
+            prompt = game.display_question()
+            if prompt is None:
+                break
+
+            answer = input(f"{prompt}\nYour answer: ")
+            game.check_answer(answer)
+            print("--------------------")
+            print(game.get_score_text())
+            print("--------------------")
+
         print("\nYou've completed the quiz!")
-        break
-    #input answer
-    answer = input(f"{current_question_text}Your answer: ")
-    game.check_answer(answer)
+        print(game.get_final_score_text())
 
-    #score
-    print("\n--------------------")
-    print(game.get_score())
-    print("--------------------")
-
-
-
-    #play again
-    play_again = input("\nDo you want to play again? (yes/no): ").lower()
-    if play_again not in ("yes", "y"):
-        print("Thanks for playing! 👋")
-        break
-    else:
-        game.reset_game()
+        # Ask to play again
+        again = input("\nDo you want to play again? (yes/no): ").strip().lower()
+        if again not in ("yes", "y"):
+            print("Thanks for playing!")
+            break
