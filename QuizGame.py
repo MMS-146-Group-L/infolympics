@@ -1,5 +1,6 @@
 import random #used for shuffler
-from Questions import question_bank # import from questions.py
+from Questions import easy_questions, medium_questions, hard_questions # import from questions.py
+from Players import Player
 
 class QuizGame:
     """
@@ -13,6 +14,9 @@ class QuizGame:
         self._question_bank = list(question_bank)  # keep a private copy
         self._score = 0
         self._index = 0
+        self._correct_count = 0
+        self._total_pesos = 0
+
         self.shuffle_questions()
 
     def shuffle_questions(self):
@@ -63,37 +67,75 @@ class QuizGame:
 
         # Check correctness by text (case-insensitive)
         correct_text = q.get_correct_answer()
-        if q.check_answer_text(chosen_text):
+        if q.check_answer(chosen_text):
             self._score += 1
-            print("Correct!")
+            self._correct_count += 1
+
+            if question_bank == easy_questions:
+                question_value = 80000 + 40000 * (self._correct_count - 1)
+
+            elif question_bank == medium_questions:
+                question_value = 120000 + 70000 * (self._correct_count - 1)
+
+            else:
+                question_value = 200000 + 80000 * (self._correct_count - 1)
+
+
+            self._total_pesos += question_value
+            print(f"Correct! You earned ₱{question_value:,} for this question.")
+            self._index += 1
+            return True # correct → continue game
+            
         else:
             print(f"Wrong! The correct answer was: {correct_text}")
-
-        self._index += 1  # move to next question
+            return False # wrong → stop game
 
     def get_score_text(self):
         """Return a formatted score string."""
         total = len(self._question_bank)
-        return f"Your current score: {self._score}/{total}"
+        return f"Score: {self._score}/{total} | Winnings: ₱{self._total_pesos:,}"
 
     def get_final_score_text(self):
         total = len(self._question_bank)
-        return f"Your final score is: {self._score}/{total}"
+        return f"Final: {self._score}/{total} | Total Winnings: ₱{self._total_pesos:,}"
 
     def reset_game(self):
         """Reset score and position, and reshuffle questions."""
         self._score = 0
         self._index = 0
+        self._correct_count = 0
+        self._total_pesos = 0
         self.shuffle_questions()
         print("\nGame has been reset!")
-
+        
     def finished(self):
         """True if we have already asked all questions."""
         return self._index >= len(self._question_bank)
 
 
 if __name__ == "__main__":
-    print("--- Welcome to InfoLympics - Your Pop Culture Quiz! ---")
+    
+    #asking the players to input their names
+    firstname = input("Enter your first name: ")
+    lastname = input("Enter your last name: ")
+    playername = Player(firstname, lastname)
+
+    # Display their names using get_name()
+    print("Welcome to InfoLympics - Your Pop Culture Quiz,", playername.get_name(),"!")
+
+    print("Choose your level of difficulty,", playername.get_name(), "!")
+
+     # ask difficulty ONCE per run
+    choice = input("Choose difficulty (easy/medium/hard): ").strip().lower()
+    if choice == "easy":
+        question_bank = easy_questions
+    elif choice == "medium":
+        question_bank = medium_questions
+    elif choice == "hard":
+        question_bank = hard_questions
+    else:
+        print("Invalid choice. Defaulting to easy.")
+        question_bank = easy_questions
 
     while True:
         game = QuizGame(question_bank)
@@ -105,7 +147,12 @@ if __name__ == "__main__":
                 break
 
             answer = input(f"{prompt}\nYour answer: ")
-            game.check_answer(answer)
+            correct = game.check_answer(answer)  # now returns True/False
+
+            if not correct:  # wrong answer ends the game
+                print("\nGame over! You lost your winnings.")
+                break
+
             print("--------------------")
             print(game.get_score_text())
             print("--------------------")
@@ -115,6 +162,32 @@ if __name__ == "__main__":
 
         # Ask to play again
         again = input("\nDo you want to play again? (yes/no): ").strip().lower()
+        
         if again not in ("yes", "y"):
             print("Thanks for playing!")
+
+            with open("game_status.txt", "w") as f:
+                f.write(f"QuestionIndex:{game._index}\n")
+                f.write(f"Score:{game._score}\n")
+                f.write(f"Winnings:{game._total_pesos}\n")
+
+            with open("highscores.txt", "a") as f:
+                f.write(f"{playername.get_name()} - {game._score} correct - ₱{game._total_pesos}\n")
+
             break
+
+        print("Choose your level of difficulty,", playername.get_name(), "!")
+
+        # ask difficulty ONCE per run
+        choice = input("Choose difficulty (easy/medium/hard): ").strip().lower()
+        if choice == "easy":
+            question_bank = easy_questions
+        elif choice == "medium":
+            question_bank = medium_questions
+        elif choice == "hard":
+            question_bank = hard_questions
+        else:
+            print("Invalid choice. Defaulting to easy.")
+            question_bank = easy_questions
+
+        

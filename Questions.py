@@ -2,9 +2,9 @@ import random
 
 class Question:
     def __init__(self, question_text, answers, correct_answer):
-        self._question_text = question_text        # the given question
-        self._answers = answers[:]                 # list of possible answers (copied)
-        self._correct_answer = correct_answer      # the correct answer
+        self._question_text = question_text                      # the given question
+        self._answers = answers[:]                               # list of possible answers (copied)
+        self._correct_answer = correct_answer                    # the correct answer
 
     # ——— Getters ———
     def get_question_text(self):
@@ -41,51 +41,15 @@ class Question:
         return f"❌ Wrong! The correct answer is: {self._correct_answer}"
 
 
-# 15 Pop Culture Questions 
-question_bank = [
-    Question("In the series Game of Thrones, who is known as the 'Mother of Dragons'?",
-             ["Cersei Lannister", "Daenerys Targaryen", "Sansa Stark", "Arya Stark"],
-             "Daenerys Targaryen"),
-
+# 15 Pop Culture Questions based on easy, medium, hard 
+easy_questions = [
     Question("Which animated movie features the characters Woody and Buzz Lightyear?",
              ["Finding Nemo", "Toy Story", "Shrek", "The Incredibles"],
              "Toy Story"),
 
-    Question("Who voices Donkey in Shrek?",
-             ["Eddie Murphy", "Chris Rock", "Will Smith", "Kevin Hart"],
-             "Eddie Murphy"),
-
-    Question("What is the name of the fictional African country in Black Panther?",
-             ["Zamunda", "Wakanda", "Genovia", "Latveria"],
-             "Wakanda"),
-
-    Question("In the Harry Potter films, who killed Dumbledore?",
-             ["Lord Voldemort", "Severus Snape", "Bellatrix Lestrange", "Draco Malfoy"],
-             "Severus Snape"),
-
-    Question("Who is known as the 'King of Pop'?",
-             ["Elvis Presley", "Michael Jackson", "Prince", "Bruno Mars"],
-             "Michael Jackson"),
-
-    Question("Which female artist released the hit song 'Rolling in the Deep'?",
-             ["Adele", "Rihanna", "Beyoncé", "Sia"],
-             "Adele"),
-
     Question("What is the stage name of Stefani Joanne Angelina Germanotta?",
              ["Lady Gaga", "Pink", "Dua Lipa", "Halsey"],
              "Lady Gaga"),
-
-    Question("Which band released the song 'Bohemian Rhapsody'?",
-             ["The Beatles", "Queen", "Led Zeppelin", "Pink Floyd"],
-             "Queen"),
-
-    Question("Which rapper released the album 'Scorpion' in 2018?",
-             ["Kanye West", "Drake", "Jay-Z", "Lil Wayne"],
-             "Drake"),
-
-    Question("What is the best-selling video game of all time?",
-             ["Minecraft", "Tetris", "Grand Theft Auto V", "Fortnite"],
-             "Minecraft"),
 
     Question("In Among Us, what is the role of the player trying to eliminate others secretly?",
              ["Crewmate", "Impostor", "Leader", "Captain"],
@@ -97,7 +61,26 @@ question_bank = [
 
     Question("What color is Pac-Man?",
              ["Red", "Yellow", "Blue", "Green"],
-             "Yellow"),
+             "Yellow")
+]
+
+
+medium_questions = [
+    Question("In the series Game of Thrones, who is known as the 'Mother of Dragons'?",
+             ["Cersei Lannister", "Daenerys Targaryen", "Sansa Stark", "Arya Stark"],
+             "Daenerys Targaryen"),
+
+    Question("Who voices Donkey in Shrek?",
+             ["Eddie Murphy", "Chris Rock", "Will Smith", "Kevin Hart"],
+             "Eddie Murphy"),
+
+    Question("What is the name of the fictional African country in Black Panther?",
+             ["Zamunda", "Wakanda", "Genovia", "Latveria"],
+             "Wakanda"),
+
+    Question("Who is known as the 'King of Pop'?",
+             ["Elvis Presley", "Michael Jackson", "Prince", "Bruno Mars"],
+             "Michael Jackson"),
 
     Question("Which popular game features the phrase 'Victory Royale'?",
              ["PUBG", "Call of Duty", "Fortnite", "Overwatch"],
@@ -105,19 +88,24 @@ question_bank = [
 ]
 
 
-# Test 
-if __name__ == "__main__":
-    q = question_bank[0]
+hard_questions = [
+    Question("In the Harry Potter films, who killed Dumbledore?",
+             ["Lord Voldemort", "Severus Snape", "Bellatrix Lestrange", "Draco Malfoy"],
+             "Severus Snape"),
 
-    # Shuffle & display using your new methods
-    q.shuffle_answers()
-    print("Q:", q.get_question_text())
-    print("Choices:", q.get_answers())
+    Question("Which female artist released the hit song 'Rolling in the Deep'?",
+             ["Adele", "Rihanna", "Beyoncé", "Sia"],
+             "Adele"),
 
-    answer = input("Your answer: ")
-    print(q.get_feedback(answer))
+    Question("Which band released the song 'Bohemian Rhapsody'?",
+             ["The Beatles", "Queen", "Led Zeppelin", "Pink Floyd"],
+             "Queen"),
 
-    # You can also directly use display_question():
-    # q.display_question()
-    # answer = input("Your answer: ")
-    # print(q.get_feedback(answer))
+    Question("Which rapper released the album 'Scorpion' in 2018?",
+             ["Kanye West", "Drake", "Jay-Z", "Lil Wayne"],
+             "Drake"),
+
+    Question("What is the best-selling video game of all time?",
+             ["Minecraft", "Tetris", "Grand Theft Auto V", "Fortnite"],
+             "Minecraft")
+]
